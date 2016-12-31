@@ -7,6 +7,22 @@ import sys
 class SmapsParser(object):
     
     SECTION_HEIGHT=16
+    CATEGORIES=[
+        "Size",
+        "Rss",
+        "Pss",
+        "Shared_Clean",
+        "Shared_Dirty",
+        "Private_Clean",
+        "Private_Dirty",
+        "Referenced",
+        "Anonymous",
+        "AnonHugePages",
+        "Swap",
+        "KernelPageSizes",
+#        "MMUPageSize",
+        "Locked",
+    ]
 
     def __init__(self):
         self.path = None
@@ -30,6 +46,7 @@ class SmapsParser(object):
             address, permissions, offset, device, inode, path = fields
         if path:
             self.path = path
+        self.size_map[self.path]["pages"] += 1
 
     def handle_proportion(self, line):
         category, size, unit = line.strip().split()
@@ -42,11 +59,11 @@ class SmapsParser(object):
         entries = self.size_map.items()
         entries.sort()
         for entry, sizes in entries:
-            print entry
-            sizes = sizes.items()
-            sizes.sort()
-            for category, size in sizes:
-                print category, size
+            print "%s Pages: %i" % (entry, sizes["pages"])
+            for category in self.CATEGORIES:
+                size = sizes[category]
+                if size:
+                    print category, size
 
 
 def main(argv=None):

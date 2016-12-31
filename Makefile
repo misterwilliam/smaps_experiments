@@ -1,7 +1,7 @@
 CFLAGS := -Wall -g2 -O0 -Wno-unused
 
 BINARIES :=
-BINARIES += null
+BINARIES += baseline
 
 all: $(BINARIES)
 clean:
